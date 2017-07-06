@@ -1,0 +1,24 @@
+const fs = require('fs')
+const path = require('path')
+const test = require('ava')
+const transformFileSync = require('babel-core').transformFileSync
+
+const plugin = require('../src/index')
+
+test('Removes style from single element', t => {
+  const expected = fs.readFileSync(path.join(__dirname, 'singleElementExpected.jsx'), 'utf8').trim()
+  const actual = transformFileSync(path.join(__dirname, 'singleElement.jsx'), {
+    plugins: [plugin],
+    babelrc: false
+  }).code
+  t.is(actual, expected)
+})
+
+test('Removes style from nested elements', t => {
+  const expected = fs.readFileSync(path.join(__dirname, 'nestedElementsExpected.jsx'), 'utf8').trim()
+  const actual = transformFileSync(path.join(__dirname, 'nestedElements.jsx'), {
+    plugins: [plugin],
+    babelrc: false
+  }).code
+  t.is(actual, expected)
+})
